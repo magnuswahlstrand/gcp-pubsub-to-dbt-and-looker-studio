@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message PubSubMessage {
+  string subscription_name = 1;
+  string message_id = 2;
+  string publish_time = 3;
+  string data = 4; // JSON data serialized as a string
+  string attributes = 5; // JSON attributes serialized as a string
+}
