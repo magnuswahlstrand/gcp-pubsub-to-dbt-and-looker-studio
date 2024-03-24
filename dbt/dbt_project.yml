@@ -1,0 +1,8 @@
+name: "demo_project"
+version: "0.0.1"
+config-version: 2
+
+models:
+  demo:
+    intermediate:
+      +materialized: table
