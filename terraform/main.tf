@@ -1,17 +1,5 @@
-terraform {
-  required_providers {
-    dbtcloud = {
-      source  = "dbt-labs/dbtcloud"
-      version = "0.2.20"
-    }
-  }
-}
+terraform {}
 
-provider "dbtcloud" {
-  account_id = var.dbt_account_id
-  token      = var.dbt_token
-#  host_url   = var.dbt_host_url
-}
 
 locals {
   topic_name = "order_created"
@@ -24,7 +12,7 @@ provider "google" {
 
 # BigQuery dataset
 resource "google_bigquery_dataset" "bq_dataset" {
-  dataset_id = "${local.app_name}_${local.topic_name}"
+  dataset_id = "${local.app_name}"
   #  friendly_name               = "Dataset for Pub/Sub messages"
   #  description                 = "A dataset that stores Pub/Sub messages"
   location   = "EU"
@@ -35,18 +23,18 @@ resource "google_bigquery_dataset" "bq_dataset" {
 ## BigQuery table
 resource "google_bigquery_table" "bq_table" {
   dataset_id = google_bigquery_dataset.bq_dataset.dataset_id
-  table_id   = "${local.app_name}_table"
+  table_id   = "${local.topic_name}"
 
   deletion_protection = false
 
-  schema = file("${path.module}/schemas/${local.topic_name}_output.json")
-#  schema = jsonencode([
-#    {
-#      "name" : "message",
-#      "type" : "JSON",
-#      "mode" : "NULLABLE"
-#    }
-#  ])
+  schema = file("${path.module}/schemas/${local.topic_name}_big_query.json")
+  #  schema = jsonencode([
+  #    {
+  #      "name" : "message",
+  #      "type" : "JSON",
+  #      "mode" : "NULLABLE"
+  #    }
+  #  ])
 }
 
 module "pubsub-dlq" {

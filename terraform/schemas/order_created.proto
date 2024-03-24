@@ -1,5 +1,15 @@
 syntax = "proto3";
 
-message PubSubMessage {
-  string message = 1;
+message OrderPlaced {
+  message OrderItem {
+    string item_id = 1;         // Unique identifier for the item
+    int32 quantity = 3;         // Quantity of the item
+    string price = 4;            // Price per item
+  }
+
+  string order_id = 1;        // Unique identifier for the order
+  string customer_id = 2;     // Identifier for the customer placing the order
+  repeated OrderItem items = 3;  // List of items in the order
+  string order_date = 6;      // The date the order was placed, as a string in RFC 3339 format
 }
+

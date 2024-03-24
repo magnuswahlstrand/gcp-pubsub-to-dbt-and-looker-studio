@@ -1,8 +1,10 @@
 # Data platform in GCP using PubSub and DBT
 
-* Go
-* Google Cloud Platform
-    * Cloud Functions
+# [Demo Dashboard](https://lookerstudio.google.com/reporting/b5d6e9f8-3e3c-41c0-bd68-2046fbd8414c)
+
+Uses the following technologies:
+
+* GCP
     * PubSub
     * BigQuery
 * DBT
@@ -14,9 +16,8 @@
 * [ ] Terraform
     * [x] PubSub
     * [x] BigQuery
-    * [ ] GCP Service account for DBT
-    * [ ] DBT
-        * [ ] DBT project
+    * [x] GCP Service account for DBT
+    * [ ] ~~DBT~~ (not supported for free accounts)
 * [ ] Rate limit endpoints
 
 ## Resources
@@ -31,6 +32,8 @@
 * DBT
     * Can't use the API (and terraform) with the free version. You can probably get quite far setting up the project
       manually, or taking advantage of the trial period.
+* BigQuery
+  * Datasets are created in the US by default. You can't change the region after creation. I create a new dataset in the EU region, manually. 
 
 # ---------------
 
@@ -51,5 +54,21 @@ We need the GCP service account with JobUser and DataEditor roles. Terraform wil
 How to publish a message to our topic
 
 ```
-gcloud pubsub topics publish projects/$PROJECT_NAME/topics/order_created  --message='{"message":"magnus was here"}'
+gcloud pubsub topics publish projects/$PROJECT_NAME/topics/order_created --message='{
+  "order_id": "order_1",
+  "customer_id": "customer_1",
+  "items": [
+    {
+      "item_id": "item_1",
+      "quantity": 1,
+      "price": "9.99"
+    },
+    {
+      "item_id": "item_2",
+      "quantity": 2,
+      "price": "19.99"
+    }
+  ],
+  "order_date": "2023-01-01T12:00:00Z"
+}'
 ```
