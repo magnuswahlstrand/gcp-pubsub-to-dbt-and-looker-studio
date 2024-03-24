@@ -1,0 +1,6 @@
+version: 2
+
+sources:
+  - name: order_platform_order_created
+    tables:
+      - name: order_platform_table
