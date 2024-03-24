@@ -12,3 +12,5 @@ crash.log
 # password, private keys, and other secrets. However, you may wish to track
 # your .tfvars file in a private Git repository.
 *.tfvars
+
+.env

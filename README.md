@@ -18,6 +18,12 @@ Uses the following technologies:
     * [x] BigQuery
     * [x] GCP Service account for DBT
     * [ ] ~~DBT~~ (not supported for free accounts)
+* [ ] DBT
+  * [ ] Add dataset for customers
+  * [ ] Add dataset for items (products)
+  * [ ] Join orders with customers and items
+* Looker
+  * [ ] Create a cooler dashboard
 * [ ] Rate limit endpoints
 
 ## Resources
@@ -33,15 +39,23 @@ Uses the following technologies:
     * Can't use the API (and terraform) with the free version. You can probably get quite far setting up the project
       manually, or taking advantage of the trial period.
 * BigQuery
-  * Datasets are created in the US by default. You can't change the region after creation. I create a new dataset in the EU region, manually. 
+    * Datasets are created in the US by default. You can't change the region after creation. I create a new dataset in
+      the EU region, manually.
 
 # ---------------
 
 # How tos
 
+## Generate fake orders
+
+```bash
+go run ./scripts/generate_orders.go
+```
+
 ## DBT setup
 
-If you don't have a paid account, you can't use the API, so we can't use Terraform. We can still set up the project manually. 
+If you don't have a paid account, you can't use the API, so we can't use Terraform. We can still set up the project
+manually.
 We need the GCP service account with JobUser and DataEditor roles. Terraform will set that up, then:
 
 1. Go to GCP console and create a new JSON key for the service accounts
@@ -72,3 +86,4 @@ gcloud pubsub topics publish projects/$PROJECT_NAME/topics/order_created --messa
   "order_date": "2023-01-01T12:00:00Z"
 }'
 ```
+
