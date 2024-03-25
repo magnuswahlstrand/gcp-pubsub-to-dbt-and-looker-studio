@@ -20,6 +20,7 @@ Uses the following technologies:
     * [x] BigQuery
     * [x] GCP Service account for DBT
     * [ ] ~~DBT~~ (not supported for free accounts)
+    * [x] Create modules for PubSub to BigQuery
 * [ ] DBT
   * [ ] Add dataset for customers
   * [ ] Add dataset for items (products)
