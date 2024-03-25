@@ -5,3 +5,4 @@ sources:
     tables:
       - name: order_created
       - name: customer_created
+      - name: countries
