@@ -22,7 +22,7 @@ Uses the following technologies:
     * [ ] ~~DBT~~ (not supported for free accounts)
     * [x] Create modules for PubSub to BigQuery
 * [ ] DBT
-  * [ ] Add dataset for customers
+  * [x] Add dataset for customers
   * [ ] Add dataset for items (products)
   * [ ] Join orders with customers and items
 * Looker
@@ -52,7 +52,7 @@ Uses the following technologies:
 ## Generate fake orders
 
 ```bash
-go run ./scripts/generate_orders.go
+go run ./scripts/generate_orders_and_customers.go
 ```
 
 ## DBT setup
