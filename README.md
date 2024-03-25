@@ -25,15 +25,21 @@ Uses the following technologies:
   * [x] Add dataset for customers
   * [ ] Add dataset for items (products)
   * [ ] Join orders with customers and items
+  * [x] Add country metadata
 * Looker
   * [ ] Create a cooler dashboard
-* [ ] Rate limit endpoints
+
+
+# DBT models
+
+![img.png](./docs/img.png)
 
 ## Resources
 
 * https://registry.terraform.io/modules/terraform-google-modules/pubsub/google/latest
 * https://medium.com/@dipan.saha/gcp-insert-records-from-pub-sub-to-bigquery-directly-2b692ff3c3e4
 * https://registry.terraform.io/providers/dbt-labs/dbtcloud/latest/docs/guides/1_getting_started
+* https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
 
 ## Lessons learned
 
@@ -44,6 +50,7 @@ Uses the following technologies:
 * BigQuery
     * Datasets are created in the US by default. You can't change the region after creation. I create a new dataset in
       the EU region, manually.
+    * We can upload a csv to create a table in BigQuery. I manually uploaded the csv for all country codes
 
 # ---------------
 

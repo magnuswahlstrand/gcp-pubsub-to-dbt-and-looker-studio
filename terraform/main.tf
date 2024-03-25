@@ -24,6 +24,7 @@ module "orders_pubsub" {
   topic_name = "order_created"
   dataset_id = local.app_name
 }
+
 module "customers_pubsub" {
   source = "./modules/pubsub_with_bigquery_drain"
 
@@ -31,4 +32,3 @@ module "customers_pubsub" {
   topic_name = "customer_created"
   dataset_id = local.app_name
 }
-

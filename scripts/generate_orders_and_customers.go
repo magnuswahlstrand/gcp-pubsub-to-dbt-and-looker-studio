@@ -91,6 +91,19 @@ var customerWeights = map[string]int{
 	"customer_9": 1,
 }
 
+var customerCountries = map[string]string{
+	"customer_0": "SE",
+	"customer_1": "PL",
+	"customer_2": "DE",
+	"customer_3": "FI",
+	"customer_4": "ES",
+	"customer_5": "SE",
+	"customer_6": "PL",
+	"customer_7": "NO",
+	"customer_8": "CN",
+	"customer_9": "TR",
+}
+
 func publishAndWait(topic *pubsub.Topic, v interface{}) {
 	ctx := context.TODO()
 	msgData, err := json.Marshal(v)
@@ -112,7 +125,7 @@ func publishAndWait(topic *pubsub.Topic, v interface{}) {
 }
 
 func main() {
-	//publishAllCustomerCreated()
+	publishAllCustomerCreated()
 	//publishRandomOrders()
 }
 
@@ -155,13 +168,14 @@ func publishAllCustomerCreated() {
 
 	for i := 0; i < 10; i++ {
 		customerId := fmt.Sprintf("customer_%d", i)
+		country := customerCountries[customerId]
 
 		message := CustomerCreated{
 			CustomerID: customerId,
 			Name:       gofakeit.Name(),
 			Address: Address{
 				City:    gofakeit.City(),
-				Country: gofakeit.CountryAbr(),
+				Country: country,
 			},
 		}
 		fmt.Printf("Customer: %v\n", message)
