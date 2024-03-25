@@ -91,7 +91,8 @@ var customerWeights = map[string]int{
 	"customer_9": 1,
 }
 
-func publishAndWait(ctx context.Context, v interface{}, topic *pubsub.Topic) {
+func publishAndWait(topic *pubsub.Topic, v interface{}) {
+	ctx := context.TODO()
 	msgData, err := json.Marshal(v)
 	if err != nil {
 		log.Fatalf("Error marshaling message: %v", err)
@@ -111,13 +112,13 @@ func publishAndWait(ctx context.Context, v interface{}, topic *pubsub.Topic) {
 }
 
 func main() {
-	//PublishCustomerCreated()
-	//return
+	//publishAllCustomerCreated()
+	//publishRandomOrders()
+}
 
-	ctx := context.Background()
-	// Set this to your topic ID
-	client, topic := newClientAndTopic(ctx, "order_created")
-	defer client.Close()
+func publishRandomOrders() {
+	topic, closeClient := pubSubTopic("order_created")
+	defer closeClient()
 
 	for i := 0; i < 100; i++ {
 		orderId := fmt.Sprintf("order_%d", rand.Intn(100000))
@@ -144,16 +145,13 @@ func main() {
 			OrderDate:  randomDate().Format(time.RFC3339),
 		}
 
-		publishAndWait(ctx, message, topic)
+		publishAndWait(topic, message)
 	}
 }
 
-func PublishCustomerCreated() {
-	topicID := "customer_created" // Set this to your topic ID
-	ctx := context.Background()
-
-	client, topic := newClientAndTopic(ctx, topicID)
-	defer client.Close()
+func publishAllCustomerCreated() {
+	topic, closeClient := pubSubTopic("customer_created")
+	defer closeClient()
 
 	for i := 0; i < 10; i++ {
 		customerId := fmt.Sprintf("customer_%d", i)
@@ -168,20 +166,21 @@ func PublishCustomerCreated() {
 		}
 		fmt.Printf("Customer: %v\n", message)
 
-		publishAndWait(ctx, message, topic)
+		publishAndWait(topic, message)
 	}
 
 }
 
-func newClientAndTopic(ctx context.Context, topicID string) (*pubsub.Client, *pubsub.Topic) {
-	projectID := os.Getenv("PROJECT_ID") // Set this to your GCP project ID
+func pubSubTopic(topicID string) (*pubsub.Topic, func()) {
+	projectID := os.Getenv("PROJECT_ID")
 
-	client, err := pubsub.NewClient(ctx, projectID)
+	client, err := pubsub.NewClient(context.TODO(), projectID)
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 	topic := client.Topic(topicID)
-	return client, topic
+	closeClient := func() { client.Close() }
+	return topic, closeClient
 }
 
 func randomDate() time.Time {
