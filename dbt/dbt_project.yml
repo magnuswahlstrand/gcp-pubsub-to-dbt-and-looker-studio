@@ -4,5 +4,7 @@ config-version: 2
 
 models:
   demo:
+    staging:
+      +materialized: table
     intermediate:
       +materialized: table
