@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/brianvoe/gofakeit/v7"
 	"log"
 	"math/rand"
 	"os"
@@ -31,6 +32,17 @@ type OrderPlaced struct {
 	CustomerID string      `json:"customer_id"`
 	Items      []OrderItem `json:"items"`
 	OrderDate  string      `json:"order_date"`
+}
+
+type CustomerCreated struct {
+	CustomerID string  `json:"customer_id"`
+	Name       string  `json:"name"`
+	Address    Address `json:"address"`
+}
+
+type Address struct {
+	City    string `json:"city"`
+	Country string `json:"country"`
 }
 
 var items = []WeightedItem{
@@ -79,18 +91,33 @@ var customerWeights = map[string]int{
 	"customer_9": 1,
 }
 
-func main() {
-	ctx := context.Background()
-	projectID := os.Getenv("PROJECT_ID") // Set this to your GCP project ID
-	topicID := "order_created"           // Set this to your topic ID
-
-	client, err := pubsub.NewClient(ctx, projectID)
+func publishAndWait(ctx context.Context, v interface{}, topic *pubsub.Topic) {
+	msgData, err := json.Marshal(v)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		log.Fatalf("Error marshaling message: %v", err)
 	}
-	defer client.Close()
+	fmt.Println(string(msgData))
 
-	topic := client.Topic(topicID)
+	result := topic.Publish(ctx, &pubsub.Message{
+		Data: msgData,
+	})
+
+	// Block until the result is returned and log server-assigned message ID
+	id, err := result.Get(ctx)
+	if err != nil {
+		log.Fatalf("Could not publish message: %v", err)
+	}
+	fmt.Printf("Published a message; msg ID: %v\n", id)
+}
+
+func main() {
+	//PublishCustomerCreated()
+	//return
+
+	ctx := context.Background()
+	// Set this to your topic ID
+	client, topic := newClientAndTopic(ctx, "order_created")
+	defer client.Close()
 
 	for i := 0; i < 100; i++ {
 		orderId := fmt.Sprintf("order_%d", rand.Intn(100000))
@@ -117,24 +144,44 @@ func main() {
 			OrderDate:  randomDate().Format(time.RFC3339),
 		}
 
-		msgData, err := json.Marshal(message)
-		if err != nil {
-			log.Fatalf("Error marshaling message: %v", err)
-		}
-		fmt.Println(string(msgData))
-
-		result := topic.Publish(ctx, &pubsub.Message{
-			Data: msgData,
-		})
-
-		// Block until the result is returned and log server-assigned message ID
-		id, err := result.Get(ctx)
-		if err != nil {
-			log.Fatalf("Could not publish message: %v", err)
-		}
-		fmt.Printf("Published a message; msg ID: %v\n", id)
-
+		publishAndWait(ctx, message, topic)
 	}
+}
+
+func PublishCustomerCreated() {
+	topicID := "customer_created" // Set this to your topic ID
+	ctx := context.Background()
+
+	client, topic := newClientAndTopic(ctx, topicID)
+	defer client.Close()
+
+	for i := 0; i < 10; i++ {
+		customerId := fmt.Sprintf("customer_%d", i)
+
+		message := CustomerCreated{
+			CustomerID: customerId,
+			Name:       gofakeit.Name(),
+			Address: Address{
+				City:    gofakeit.City(),
+				Country: gofakeit.CountryAbr(),
+			},
+		}
+		fmt.Printf("Customer: %v\n", message)
+
+		publishAndWait(ctx, message, topic)
+	}
+
+}
+
+func newClientAndTopic(ctx context.Context, topicID string) (*pubsub.Client, *pubsub.Topic) {
+	projectID := os.Getenv("PROJECT_ID") // Set this to your GCP project ID
+
+	client, err := pubsub.NewClient(ctx, projectID)
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+	}
+	topic := client.Topic(topicID)
+	return client, topic
 }
 
 func randomDate() time.Time {
