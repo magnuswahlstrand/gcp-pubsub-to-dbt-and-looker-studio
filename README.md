@@ -1,5 +1,7 @@
 # Data platform in GCP using PubSub and DBT
 
+⚠️ Work in progress! ⚠️
+
 # [Demo Dashboard](https://lookerstudio.google.com/reporting/b5d6e9f8-3e3c-41c0-bd68-2046fbd8414c)
 
 Uses the following technologies:
@@ -13,7 +15,7 @@ Uses the following technologies:
 
 ## Todos
 
-* [ ] Terraform
+* [x] Terraform
     * [x] PubSub
     * [x] BigQuery
     * [x] GCP Service account for DBT
