@@ -4,3 +4,4 @@ sources:
   - name: order_platform
     tables:
       - name: order_created
+      - name: customer_created
