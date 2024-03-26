@@ -2,7 +2,9 @@
 
 A simple project to show how to connect an event based application in Google Cloud Platform with [dbt](https://www.getdbt.com/), to create a simple, but powerful platform for data visualization. Everything (almost 🤓) is set up using Terraform.
 
-### [Demo: Looker Studio Dashboard](https://lookerstudio.google.com/reporting/b5d6e9f8-3e3c-41c0-bd68-2046fbd8414c) 
+
+<div align="center" style="font-size:25px"><a style="font-size: 25px" href="https://lookerstudio.google.com/reporting/b5d6e9f8-3e3c-41c0-bd68-2046fbd8414c">Demo: Looker Studio Dashboard</a>
+</div> 
 
 ![img.png](./docs/dashboard.png)
 
