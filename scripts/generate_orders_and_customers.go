@@ -40,6 +40,12 @@ type CustomerCreated struct {
 	Address    Address `json:"address"`
 }
 
+type ProductCreated struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
 type Address struct {
 	City    string `json:"city"`
 	Country string `json:"country"`
@@ -126,7 +132,8 @@ func publishAndWait(topic *pubsub.Topic, v interface{}) {
 
 func main() {
 	//publishAllCustomerCreated()
-	publishRandomOrders()
+	//publishRandomOrders()
+	publishAllProductCreated()
 }
 
 func publishRandomOrders() {
@@ -183,6 +190,30 @@ func publishAllCustomerCreated() {
 		publishAndWait(topic, message)
 	}
 
+}
+
+func publishAllProductCreated() {
+	topic, closeClient := pubSubTopic("product_created")
+	defer closeClient()
+
+	var products = []ProductCreated{
+		{ID: "item_1", Name: "Luxe Laptop", Type: "electronics"},
+		{ID: "item_2", Name: "Aqua Printer", Type: "electronics"},
+		{ID: "item_3", Name: "Quick Laptop Max", Type: "electronics"},
+		{ID: "item_4", Name: "Black Tablet", Type: "electronics"},
+		{ID: "item_5", Name: "Chase from Paw Patrol", Type: "baby toys"},
+		{ID: "item_6", Name: "Zuma from Paw Patrol", Type: "baby toys"},
+		{ID: "item_7", Name: "Sky from Paw Patrol", Type: "baby toys"},
+		{ID: "item_8", Name: "Marshall from Paw Patrol", Type: "baby toys"},
+		{ID: "item_9", Name: "Double Energy", Type: "soaps"},
+		{ID: "item_10", Name: "Ball Lightning", Type: "soaps"},
+		{ID: "item_11", Name: "Hand of Greed", Type: "soaps"},
+		{ID: "item_12", Name: "Epson One-Use Camera", Type: "cameras"},
+	}
+
+	for _, product := range products {
+		publishAndWait(topic, product)
+	}
 }
 
 func pubSubTopic(topicID string) (*pubsub.Topic, func()) {

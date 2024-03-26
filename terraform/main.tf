@@ -16,6 +16,16 @@ resource "google_bigquery_dataset" "bq_dataset" {
   location   = "EU"
 }
 
+module "service_account_for_dbt" {
+  source        = "terraform-google-modules/service-accounts/google"
+  project_id    = var.project
+  names         = ["dbt-service-account"]
+  project_roles = [
+    "${var.project}=>roles/bigquery.jobUser",
+    "${var.project}=>roles/bigquery.dataEditor",
+  ]
+}
+
 
 module "orders_pubsub" {
   source = "./modules/pubsub_with_bigquery_drain"
@@ -32,3 +42,12 @@ module "customers_pubsub" {
   topic_name = "customer_created"
   dataset_id = local.app_name
 }
+
+module "products_pubsub" {
+  source = "./modules/pubsub_with_bigquery_drain"
+
+  project    = var.project
+  topic_name = "product_created"
+  dataset_id = local.app_name
+}
+

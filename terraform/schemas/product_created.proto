@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message ProductCreated {
+  string id = 1;
+  string type = 2;
+  string name = 3;
+}

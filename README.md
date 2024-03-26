@@ -1,17 +1,18 @@
 # Data platform in GCP using PubSub and DBT
 
-A simple project to show how to connect an event based application in Google Cloud Platform with [dbt](https://www.getdbt.com/), to create a simple, but powerful platform for data visualization. Everything (almost 🤓) is set up using Terraform.
+A simple project to show how to connect an event based application in Google Cloud Platform
+with [dbt](https://www.getdbt.com/), to create a simple, but powerful platform for data visualization. Everything (
+almost 🤓) is set up using Terraform.
 
 
 <div align="center" style="font-size:25px"><a style="font-size: 25px" href="https://lookerstudio.google.com/reporting/b5d6e9f8-3e3c-41c0-bd68-2046fbd8414c">Demo: Looker Studio Dashboard</a>
-</div> 
 
 ![img.png](./docs/dashboard.png)
 
-
-
 ## Details
+
 #### Tools:
+
 * Google PubSub (for events)
 * Google BigQuery (for data storage)
 * [dbt](https://www.getdbt.com/) (for data transformation)
@@ -28,19 +29,24 @@ A simple project to show how to connect an event based application in Google Clo
 #### Details
 
 The flow is as follows:
-1. When an entity is created (customer, product, order), an event is published to individual PubSub topics (customer_created, ...).
+
+1. When an entity is created (customer, product, order), an event is published to individual PubSub topics (
+   customer_created, ...).
 2. All events are piped and stored to BigQuery dataset
 3. [dbt](https://www.getdbt.com/) uses this data set to create a basic model, and joins them
 4. The output is fed back to BigQuery in a new dataset
 5. Looker Studio is to create a simple dashboard with filters to analyse orders data
 
 # DBT models
-**dbt** takes its source data from BigQuery (annotated by **SRC** below) to create models (annotated by **MDL**). The models are then fed back to BigQuery either as views or as tables.  
+
+**dbt** takes its source data from BigQuery (annotated by **SRC** below) to create models (annotated by **MDL**). The
+models are then fed back to BigQuery either as views or as tables.  
 ![img.png](./docs/dbt_models.png)
 
 # How to run
 
-You should be able to run most things yourself by cloning the repo, but you need to have a GCP account and a project set up. DBT project is set up manually, since the free account doesn't allow API access.
+You should be able to run most things yourself by cloning the repo, but you need to have a GCP account and a project set
+up. DBT project is set up manually, since the free account doesn't allow API access.
 
 ## DBT setup
 
@@ -59,35 +65,31 @@ We need the GCP service account with JobUser and DataEditor roles. Terraform wil
 go run ./scripts/generate_orders_and_customers.go
 ```
 
-
-
 ------
 
-# Magnus' notes below, you can probably stop reading here 
+# Magnus' notes below, you can probably stop reading here
 
 ------
-
-
 
 ## Todos
 
 * [x] Terraform
-  * [x] PubSub
-  * [x] BigQuery
-  * [x] GCP Service account for DBT
-  * [ ] ~~DBT~~ (not supported for free accounts)
-  * [x] Create modules for PubSub to BigQuery
-* [ ] DBT
-  * [x] Add dataset for customers
-  * [ ] Add dataset for items (products)
-  * [x] Join orders with customers and items
-  * [x] Add country metadata (region, pretty name)
-* [ ] Looker
-  * [x] Create a cooler dashboard
-  * [ ] Add filter for product types
-* [ ] Documentation
-  * [x] Add intro and technical overview README
-  * [ ] Add final DBT model
+    * [x] PubSub
+    * [x] BigQuery
+    * [x] GCP Service account for DBT
+    * [ ] ~~DBT~~ (not supported for free accounts)
+    * [x] Create modules for PubSub to BigQuery
+* [x] DBT
+    * [x] Add dataset for customers
+    * [x] Add dataset for items (products)
+    * [x] Join orders with customers and items
+    * [x] Add country metadata (region, pretty name)
+* [x] Looker
+    * [x] Create a cooler dashboard
+    * [x] Add filter for product types
+* [x] Documentation
+    * [x] Add intro and technical overview README
+    * [x] Add final DBT model
 
 ## Resources
 
@@ -107,8 +109,6 @@ go run ./scripts/generate_orders_and_customers.go
       the EU region, manually.
     * We can upload a csv to create a table in BigQuery. I manually uploaded the csv for all country codes
 
-
-  
 ## Notes
 
 How to publish a message to our topic
