@@ -1,4 +1,8 @@
 with
+    products as (
+        select *
+        from {{ ref("stg_demo__products") }}
+    ),
     customers as (
         select *
         from {{ ref("stg_demo__customers") }}
@@ -20,7 +24,7 @@ with
         select *
         from {{ ref("stg_demo__orders") }}
     ),
-    rows_with_customers as (
+    final as (
         select
             o.*,
             c.name as customer_name,
@@ -29,7 +33,12 @@ with
             c.country_name as customer_country_name,
             c.country_region as customer_country_region,
             c.country_sub_region as customer_country_sub_region,
-        from order_rows as o
-                 left join customers_with_country as c on o.customer_id = c.customer_id
+            p.id as product_id,
+            p.name as product_name,
+            p.type as product_type,
+        from 
+            order_rows as o
+        left join customers_with_country as c on o.customer_id = c.customer_id
+        left join products as p on o.item_id = p.id       
     )
-select * from rows_with_customers
+select * from final
