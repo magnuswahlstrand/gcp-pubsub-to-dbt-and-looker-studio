@@ -125,8 +125,8 @@ func publishAndWait(topic *pubsub.Topic, v interface{}) {
 }
 
 func main() {
-	publishAllCustomerCreated()
-	//publishRandomOrders()
+	//publishAllCustomerCreated()
+	publishRandomOrders()
 }
 
 func publishRandomOrders() {
@@ -200,6 +200,6 @@ func pubSubTopic(topicID string) (*pubsub.Topic, func()) {
 func randomDate() time.Time {
 	hour := rand.Intn(24)
 	minute := rand.Intn(60)
-	startDate := time.Date(2023, 1, 1, hour, minute, 0, 0, time.UTC)
-	return startDate.AddDate(0, 0, rand.Intn(365))
+	startDate := time.Date(2024, 1, 1, hour, minute, 0, 0, time.UTC)
+	return startDate.AddDate(0, 0, rand.Intn(100))
 }
